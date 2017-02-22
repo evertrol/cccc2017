@@ -1,0 +1,258 @@
+\documentclass[a4paper]{article}
+
+\usepackage{times}
+\usepackage{listings}
+\usepackage{amsmath}
+
+\lstset{basicstyle=\ttfamily}
+
+\setlength{\textwidth}{.75\paperwidth}
+\setlength{\textheight}{.9\paperheight}
+\hoffset -2.5cm
+\voffset -2.5cm
+\pagestyle{empty}
+
+\setlength{\parindent}{0cm}
+\renewcommand{\baselinestretch}{1.1}
+
+
+\begin{document}
+
+\section{Exercise}
+
+Implement (type, don't copy-paste), compile and run the following program:
+
+\lstinputlisting[language=C]{solutions/sum/sum.c}
+
+
+\section{Exercise}
+
+The Fibonacci sequence is given by
+\begin{equation*}
+F_n = F_{n-1} + F_{n-2}
+\end{equation*}
+with $F_0 = 0$ and $F_1 = 1$.
+
+Using the summation program as example, implement the Fibonacci sequence calculation
+\begin{itemize}
+\item Print each term (index and value) inside the loop
+\item First, print only the first 5 or 10 numbers to verify the calculation
+\item Next, print the first 50 Fibonacci numbers
+\end{itemize}
+
+\section{Exercise}
+
+Back to the summation program
+
+\begin{itemize}
+\item Wrap the summation in a loop itself, and reset sum inside the outer loop, so it runs longer
+
+\item Find the number of iterations (inner times outer) where the program runs just a few seconds, without optimizations.  You can use the bash / Linux function time: \lstinline|time <program>| (Using time is not precise, but a good approximation for a few seconds)
+
+\item Now compile with -O3 (full optimization), and do the same
+
+\item Now use a non-trivial summation, e.g.: \lstinline|sum += log(i);|
+
+   Use -O3, \lstinline|#include <math.h>| and link with libm (-lm flag)
+
+\item  Now remove the final printf function, and do the same
+
+\end{itemize}
+
+\clearpage
+
+\section{Exercise}
+
+\begin{itemize}
+\item Put the Fibonacci calculation inside a function. Call it from main, and print its return value there
+
+\item Add functionality to return -1 as an error value when the input argument is incorrect (negative or too large)
+
+\item Extra: make a recursive Fibonacci function (remove the for-loop).
+  Note: functions calls are expensive: a for-loop is much faster than a series of (recursive) function calls
+\end{itemize}
+
+\section{Exercise}
+
+\begin{itemize}
+
+\item Move the Fibonacci function into its own file (or move the main function into its own file): \lstinline|fibo.c| and \lstinline|main.c|
+  
+\item Create a fibo.h file that has the declaration of the function. Include it in fibo.c and main.c
+  
+\item Compile \lstinline|fibo.c| and \lstinline|main.c| to objects file (\lstinline|fibo.o| and \lstinline|main.o|): \lstinline|gcc -c <other flags> fibo.c|
+
+   Link the object files together into an executable
+  
+\item Turn the \lstinline|fibo.o| object file into a (static) library \lstinline|fibo.a|
+  
+\item Compile and link \lstinline|main.c| with the \lstinline|fibo.a| in one go
+  
+\item Extra: create a Makefile to do all the work
+
+\end{itemize}
+
+
+\section{Exercise}
+
+\begin{itemize}
+
+\item Define a struct Ball that contains an x and y position, and an vx and vy velocity
+
+  \item Instantiate the struct at a global level (outside main and other functions). Pick some decent initial values;
+
+    \item Create a function that takes as inputs
+
+      - a time interval tdelta
+
+      - a gravity acceleration constant g
+
+      - and a damping factor f
+      
+      and calculates the next position \& velocity of the ball. The ball bounces when \lstinline|y <= 0|, and loses vy by a factor f (as well as reverses vy).
+
+\end{itemize}
+
+\begin{itemize}
+
+\item In main(), set tdelta, g and f as variables (not constants)
+
+\item Set a variable stop, which is the total time of the simulation
+
+\item Start at t = 0, and loop until t $>$ stop
+        
+\item Use printf to print the time, x and y position each loop iteration
+  
+\end{itemize}
+
+\begin{itemize}
+
+\item You can redirect the output to a file: \lstinline|./ball > ballpos.txt|
+  
+\item You can create a plot of, for example, height versus time in any spreadsheet
+
+\item Or if you like to try gnuplot: \lstinline|gnuplot> plot “ballpos.txt” using 1:3 with lines title “ball”|
+  
+\end{itemize}
+
+\clearpage
+
+\section{Exercise}
+
+Take the file with the ball main function, and add the following before the loop. 
+scanf reads input from the command line (and requires conversion specifiers like printf), and we can ask a user for input.
+Note that scanf can’t print output (e.g., a question string). scanf waits for $<$enter$>$ before fully reading the input, and discards whitespace
+
+\begin{lstlisting}
+int main()
+{
+    double g = 9.8, f = 0, tdelta = 1, stop = 1;
+    printf(“Value for g: “);
+    scanf("%lf", &g);
+    printf(“Value for f: “);
+    scanf("%lf", &f);
+    …
+    return 0;
+}
+\end{lstlisting}
+
+\lstinline|"\%lf"| indicates a double explicitly. Think “long float”.
+
+NB: scanf returns the number of correctly read variables. Use it to verify everything went ok.
+
+\section{Exercise}
+
+Move the global ball variable into the main function. 
+
+Change the function that calculates the ball’s movement to accept a pointer to a Ball struct (as well as the usual g, f, tdelta arguments).
+
+Don’t forget to change the call to the function in main as well.
+
+\section{Exercise}
+
+Store the results of the ball calculation in three arrays: timestamps, xpos and ypos.
+You have to calculate the array size from the input time parameters, and dynamically allocate the array (and free the allocation afterwards).
+
+To convert a double to an int, you cast it: 
+\begin{lstlisting}
+  int a = (int) 5.0;
+\end{lstlisting}
+
+Be aware that this truncates the result (that is, rounds down). For example:
+\begin{lstlisting}
+int a = (int) (10.0/3.0);
+a == 3
+\end{lstlisting}
+
+Move the printf function out the main loop, and create a second loop afterwards where you only print the results.
+(Normally, the calculations would all be done in one function, and printing of the results in another function.)
+
+\clearpage
+
+\section{Exercise}
+
+Change the ball program and compile it with a C++ compiler. You’ll run into a few incompatibilities:
+
+Cast the return value of malloc in C++:
+\begin{lstlisting}
+  double *timestamps = (double *) malloc(n * sizeof *timestamps); 
+\end{lstlisting}
+
+While you won’t get a warning doing this in C, don’t do it: it hides a potential error (forgotten \lstinline|#include <stdlib.h>|).
+This is why C++ != C with some extras
+
+C++ does not have designated initializers for structs. Instead, use
+\begin{lstlisting}
+  struct Ball ball = {0, 10, 1, 0};
+\end{lstlisting}
+You can do this as well in C, but it is less clear than using the member names.
+In C++, structs are quite different beasts, and initialization like this is not really used.
+
+\section{Exercise}
+
+Replace malloc/free with std::vector
+
+\section{Exercise}
+
+Replace printf/scanf with std::cout/std::cin
+
+\section{Exercise}
+
+Replace the Ball struct pointer with a reference
+
+\section{Exercise}
+
+Implement the ball calculation inside the Ball struct
+
+\begin{itemize}
+
+\item use class instead of struct 
+\item your choice of private / public 
+\item your choice of member variable naming style
+\item gravity g and efficiency f should become member variables as well
+
+\end{itemize}
+
+For the constructor: gravity and efficiency should be mandatory arguments The position and velocity variables should be default arguments.
+
+\subsubsection*{Extra}
+
+\begin{itemize}
+
+\item Store the positions and time in a vector, as member variables of the class
+
+\item Add a member function that takes care of the full loop: it should take a start and stop time, and a timestep. It should call the calculation function each iteration. 
+
+  Thus, everything we did in main(), is now done inside the class (apart from the output)
+
+\item Since you’re now not calling the calculation directly, you could make it private.
+
+\item You’ll need to make the relevant output variables public, or define a getter function, if you want to be able to read and print the final results 
+
+  Or: you could define a print() or output() class member function for this.
+  
+\end{itemize}
+
+
+
+\end{document}
