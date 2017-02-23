@@ -1,0 +1,5 @@
+gcc -Wall -Wextra -Wpedantic -std=c11 -c fibo.c
+gcc -Wall -Wextra -Wpedantic -std=c11 -c main.c
+gcc -Wall -Wextra -Wpedantic -std=c11 main.o fibo.o -o fibo
+ar -rcs libfibo.a fibo.o
+gcc main.o -o fibo -lfibo -L.
